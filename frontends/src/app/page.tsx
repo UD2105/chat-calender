@@ -11,7 +11,15 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  useDisclosure
+  useDisclosure,
+  Input,
+  Box,
+  Text,
+  Center,
+  Stack, 
+  HStack, 
+  VStack,
+  Textarea,
 } from '@chakra-ui/react'
 
 export default function App() {
@@ -46,9 +54,23 @@ function ManualClose() {
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create your account</ModalHeader>
+          <ModalHeader>
+            <Center>
+              <Box w ="80%">
+                <Input placeholder='イベントタイトル' />
+              </Box>
+            </Center>
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
+          <VStack>
+            <Input
+                placeholder="Select Date and Time"
+                size="md"
+                type="datetime-local"
+              />
+              <Textarea placeholder='Here is a sample placeholder' />
+          </VStack>
 
           </ModalBody>
 
