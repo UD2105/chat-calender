@@ -221,6 +221,13 @@ def read_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     events = crud.get_events(db, skip=skip, limit=limit)
     return events
 
+@app.get("/events/{event_id}", response_model=schemas.Event)
+def read_user(event_id: int, db: Session = Depends(get_db)):
+    db_event = crud.get_events(db, event_id=event_id)
+    if db_event is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_event
+
 @app.get("/")
 async def root():
     return {"message": "おはよう世界"}
