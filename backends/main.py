@@ -52,17 +52,17 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
-@app.post("/users/{user_id}/items/", response_model=schemas.Item)
-def create_item_for_user(
-    user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
+@app.post("/users/{user_id}/events/", response_model=schemas.Event)
+def create_event_for_user(
+    user_id: int, event: schemas.EventCreate, db: Session = Depends(get_db)
 ):
-    return crud.create_user_item(db=db, item=item, user_id=user_id)
+    return crud.create_user_event(db=db, event=event, user_id=user_id)
 
 
-@app.get("/items/", response_model=list[schemas.Item])
-def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    items = crud.get_items(db, skip=skip, limit=limit)
-    return items
+@app.get("/events/", response_model=list[schemas.Event])
+def read_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    events = crud.get_events(db, skip=skip, limit=limit)
+    return events
 
 @app.get("/")
 async def root():

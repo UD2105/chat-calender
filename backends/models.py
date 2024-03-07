@@ -1,8 +1,8 @@
-
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 
 from database import Base
+
 
 
 class User(Base):
@@ -13,15 +13,16 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
 
-    items = relationship("Item", back_populates="owner")
+    events = relationship("Event", back_populates="owner")
 
 
-class Item(Base):
-    __tablename__ = "items"
+class Event(Base):
+    __tablename__ = "events"
 
     id = Column(Integer, primary_key=True)
     title = Column(String, index=True)
+    date = Column(DateTime)
     description = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
 
-    owner = relationship("User", back_populates="items")
+    owner = relationship("User", back_populates="events")

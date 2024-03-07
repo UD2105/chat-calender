@@ -1,16 +1,17 @@
 from pydantic import BaseModel
+import datetime
 
-
-class ItemBase(BaseModel):
+class EventBase(BaseModel):
     title: str
     description: str | None = None
+    date:  datetime.datetime
 
 
-class ItemCreate(ItemBase):
+class EventCreate(EventBase):
     pass
 
 
-class Item(ItemBase):
+class Event(EventBase):
     id: int
     owner_id: int
 
@@ -29,7 +30,7 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
     is_active: bool
-    items: list[Item] = []
+    Events: list[Event] = []
 
     class Config:
         orm_mode = True
