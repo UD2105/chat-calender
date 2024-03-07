@@ -26,9 +26,22 @@ export default function App() {
 function ManualClose() {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const handleClick = () => {
+    fetch(" http://127.0.0.1:8000").then((res) => {
+      res.json().then((data) => {
+        console.log(data)
+      });
+    });
+    };
   return (
     <>
-      <Button onClick={onOpen}>Open Modal</Button>
+      <Button onClick={onOpen}>
+       Open Modal
+
+      </Button>
+      <Button onClick={handleClick}>
+        CONNECTED_TEST
+      </Button>
 
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
