@@ -31,6 +31,8 @@ def create_user(db: Session, user: schemas.UserCreate):
 def get_events(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Event).offset(skip).limit(limit).all()
 
+def get_event(db: Session, event_id: int):
+    return db.query(models.Event).filter(models.Event.id == event_id).first()
 
 def create_user_event(db: Session, event: schemas.EventCreate, user_id: int):
     db_event = models.Event(**event.dict(), owner_id=user_id)
