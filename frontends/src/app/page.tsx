@@ -2,6 +2,7 @@
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import { ChakraProvider } from '@chakra-ui/react'
+import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form"
 
 type Inputs = {
@@ -115,6 +116,23 @@ function AddEventDialog() {
 }
 
 function Calendar() {
+  const [events, setEvents] = useState([]);
+
+  const handleFetch = async () => {
+    const response = await fetch('http://127.0.0.1:8000/events/user/1/', {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+    )
+    const data = await response.json()
+    console.log(data)
+    setEvents(data);
+  }
+
+  useEffect(() => {
+    handleFetch();
+  }, []);
 
   return (
     <div>
@@ -123,10 +141,7 @@ function Calendar() {
         plugins={[ dayGridPlugin ]}
         initialView="dayGridWeek"
         weekends={false}
-        events={[
-          { title: 'event 1', date: '2024-03-015' },
-          { title: 'event 2', date: '2024-03-16' }
-        ]}
+        events={events}
       />
     </div>
   )
