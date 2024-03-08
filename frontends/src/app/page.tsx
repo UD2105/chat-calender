@@ -34,13 +34,18 @@ import {
   FormLabel,
   FormErrorMessage,
   FormHelperText,
+  Flex,
+  Heading,
+  Spacer,
 } from '@chakra-ui/react'
 
 export default function App() {
   
   return (
     <ChakraProvider>
+    
       <Calendar />
+    
     </ChakraProvider>
   )
 }
@@ -49,7 +54,6 @@ function AddEventDialog() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { register,handleSubmit,watch,formState: { errors }} = useForm<Inputs>()
   const formData = new FormData();
-
   const onSubmit: SubmitHandler<Inputs> = (data) => [fetch('http://127.0.0.1:8000/users/1/events/', {
     method: 'POST',
     headers: {
@@ -68,14 +72,15 @@ function AddEventDialog() {
     };
   return (
     <>
-      <Button onClick={onOpen}>
-       Open Modal
-
-      </Button>
-      <Button onClick={handleClick}>
-        CONNECTED_TEST
-      </Button>
-
+      <Flex pb = "2" minWidth='max-content' alignItems='center' gap='2'>
+        <Box p = "2">
+          <Heading size='md'>Chalender</Heading>
+        </Box>
+          <Spacer />
+          <Button colorScheme='blue' onClick={onOpen}>
+            イベントを追加する
+          </Button>
+      </Flex>
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -98,11 +103,8 @@ function AddEventDialog() {
               />
               <Textarea placeholder='Here is a sample placeholder' {...register("description", { required: true })}/>
               {errors.description && <span>This field is required</span>}
-
           </VStack>
-
           </ModalBody>
-
           <ModalFooter>
             <Button colorScheme='blue' mr={3} type = "submit">
               Add events
@@ -159,7 +161,7 @@ function Calendar() {
   }
 
   return (
-    <div>
+    <Box p = "2">
       <AddEventDialog/>
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -191,24 +193,36 @@ function Calendar() {
       <FullCalendar
         plugins={[ dayGridPlugin]}
         eventContent={generateRenderEventContent(handleOpen)}
-        initialView="dayGridWeek"
+        initialView="dayGridMonth"
         weekends={false}
-        events={events}
-        
+        events={events} 
+        headerToolbar={{left:'dayGridMonth,dayGridWeek', center:"title"}}
       />
-    </div>
+    </Box>
   )
-  
+}
+
+function formatData(data){
+  let hours = data.getHours();
+  let minutes = data.getMonth();
+  const ampm = hours >= 12 ? '午前' : '午後'
+  hours = hours % 12;
+  hours =hours ? hours : 12
+  const strTime = minutes == 0 ? ampm + hours + '時' : ampm + hours + '時' + minutes + '分'
+  return strTime
 }
 
 function generateRenderEventContent(handleOpen){
   function renderEventContent(eventInfo) {
+    const date2 = new Date(eventInfo.event.startStr);
     return(
       <>
-        <i>{eventInfo.event.title}</i>
-        <Button onClick ={ () => handleOpen(eventInfo.event.id) }>
-          Show Detail
+        <Center w = "100%">
+        <Button colorScheme='blue' onClick ={ () => handleOpen(eventInfo.event.id) }>
+            <i>{formatData(date2)}</i>
         </Button>
+        </Center>
+
       </>
     )
   }
