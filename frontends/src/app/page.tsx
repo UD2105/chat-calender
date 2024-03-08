@@ -118,6 +118,7 @@ function AddEventDialog() {
 
 function Calendar() {
   const [events, setEvents] = useState([]);
+  const [eventdetail, setEventDetail] = useState(undefined);
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { register,handleSubmit,watch,formState: { errors }} = useForm<Inputs>()
   const onSubmit: SubmitHandler<Inputs> = (data) => [fetch('http://127.0.0.1:8000/users/1/events/', {
@@ -144,7 +145,16 @@ function Calendar() {
   }, []);
 
 
-  const handleOpen =()=>{
+  const handleOpen = async (eventId) => {
+    const response = await fetch(`http://127.0.0.1:8000/events/${eventId}/`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+    )
+    const data = await response.json()
+    console.log(data)
+    setEventDetail(data)
     onOpen()
   }
 
@@ -158,31 +168,22 @@ function Calendar() {
           <ModalHeader>
             <Center>
               <Box w ="80%">
-                <Input placeholder='イベントタイトル' {...register("title", { required: true })}  />
+              <Text fontSize='5xl'>{eventdetail ? eventdetail['title']: " " }</Text>
               </Box>
             </Center>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
           <VStack>
-            <Input
-                placeholder="Select Date and Time"
-                size="md"
-                type="datetime-local"
-                {...register("date", { required: true })}
-              />
-              <Textarea placeholder='Here is a sample placeholder' {...register("description", { required: true })}/>
-              {errors.description && <span>This field is required</span>}
+            <Text fontSize='3xl'>{eventdetail ? eventdetail['date']: " " }</Text>
+            <Text fontSize='3xl'>{eventdetail ? eventdetail['description']: " " }</Text>
 
           </VStack>
 
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} type = "submit">
-              Add events
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
+
           </ModalFooter>
         </ModalContent>
         </form>
@@ -204,9 +205,10 @@ function generateRenderEventContent(handleOpen){
   function renderEventContent(eventInfo) {
     return(
       <>
-        <b>{eventInfo.timeText}</b>
         <i>{eventInfo.event.title}</i>
-        <Button onClick={handleOpen}>test</Button>
+        <Button onClick ={ () => handleOpen(eventInfo.event.id) }>
+          Show Detail
+        </Button>
       </>
     )
   }
