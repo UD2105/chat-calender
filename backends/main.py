@@ -223,10 +223,10 @@ def read_user(event_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Event not found")
     return db_event
 
-
-@app.get("/events/", response_model=list[schemas.Event])
-def read_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    events = crud.get_events(db, skip=skip, limit=limit)
+@app.get("/events/user/{user_id}", response_model=list[schemas.Event])
+def read_events(user_id: int,skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    events = crud.get_events_by_userid(db,user_id=user_id, skip=skip, limit=limit)
+    print(events)
     return events
 
 @app.get("/groups/", response_model=list[schemas.Group])

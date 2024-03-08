@@ -43,6 +43,15 @@ def get_groups(db: Session, skip: int = 0, limit: int = 100):
 def get_group_by_name(db: Session, name: str):
     return db.query(models.Group).filter(models.Group.name == name).first()
 
+def get_events_by_userid(db: Session, user_id: int, skip: int = 0, limit: int = 100):
+    event_list = []
+    user = get_user(db,user_id)
+    for group in user.groups:
+        for member in group.members:
+            print(member)
+            event_list.extend(member.events)
+    return event_list
+
 def create_group(db: Session, group: schemas.GroupCreate):
     db_group = models.Group(name =group.name)
     db.add(db_group)
