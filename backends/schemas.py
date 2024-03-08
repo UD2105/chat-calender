@@ -36,7 +36,7 @@ class User(UserBase):
         orm_mode = True
 
 class GroupBase(BaseModel):
-    name: int
+    name: str
 
 class Group(GroupBase):
     id: int
@@ -45,5 +45,5 @@ class Group(GroupBase):
     class Config:
         orm_mode = True
 
-class UserCreate(UserBase):
+class GroupCreate(GroupBase):
     pass
