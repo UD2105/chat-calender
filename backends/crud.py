@@ -34,6 +34,9 @@ def get_events(db: Session, skip: int = 0, limit: int = 100):
 def get_event(db: Session, event_id: int):
     return db.query(models.Event).filter(models.Event.id == event_id).first()
 
+def get_groups(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Group).offset(skip).limit(limit).all()
+
 def create_user_event(db: Session, event: schemas.EventCreate, user_id: int):
     db_event = models.Event(**event.dict(), owner_id=user_id)
     db.add(db_event)

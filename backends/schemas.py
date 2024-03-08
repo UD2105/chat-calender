@@ -34,3 +34,16 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+class GroupBase(BaseModel):
+    name: int
+
+class Group(GroupBase):
+    id: int
+
+    members: list[User] = []
+    class Config:
+        orm_mode = True
+
+class UserCreate(UserBase):
+    pass

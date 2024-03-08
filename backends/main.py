@@ -229,6 +229,11 @@ def read_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     events = crud.get_events(db, skip=skip, limit=limit)
     return events
 
+@app.get("/groups/", response_model=list[schemas.Group])
+def read_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    groups = crud.get_groups(db, skip=skip, limit=limit)
+    return groups
+
 @app.get("/")
 async def root():
     return {"message": "おはよう世界"}
