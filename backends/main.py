@@ -234,6 +234,13 @@ def read_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     groups = crud.get_groups(db, skip=skip, limit=limit)
     return groups
 
+@app.post("/groups/", response_model=schemas.Group)
+def create_group(group: schemas.GroupCreate, db: Session = Depends(get_db)):
+    db_group = crud.get_group_by_name(db, name=group.name)
+    if db_group:
+        raise HTTPException(status_code=400, detail="Group Name already registered")
+    return crud.create_group(db=db, group=group)
+
 @app.get("/")
 async def root():
     return {"message": "おはよう世界"}
